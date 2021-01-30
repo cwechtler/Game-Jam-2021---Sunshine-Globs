@@ -17,10 +17,6 @@ public class Player : MonoBehaviour
 	bool moveHorizontaly;
 	bool moveVertically;
 
-	//public List<string> collectedItems;
-	//public Dictionary<string, GameObject> collectedItems;
-
-
 	public static bool IsDead { get; set; } = false;
 
 	void Start()
@@ -139,8 +135,6 @@ public class Player : MonoBehaviour
 		}
 
 		if (collision.gameObject.tag == "Item") {
-			print("Item " + collision.gameObject.name);
-			//collectedItems.Add(collision.gameObject.name, collision.gameObject);
 			GameController.instance.CollectItems(collision.gameObject.name);
 			Destroy(collision.gameObject);
 		}
