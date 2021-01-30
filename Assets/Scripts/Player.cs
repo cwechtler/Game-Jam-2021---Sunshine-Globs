@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
 	[SerializeField] private float movementSpeed = 5f;
 	[SerializeField] private float boostSpeed = 15f;
+	[SerializeField] private float dropSpeed = .5f;
 
 	Rigidbody2D myRigidbody2D;
 	SpriteRenderer spriteRenderer;
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour
 	bool moveHorizontaly;
 	bool moveVertically;
 
-	public List<string> collectedItems;
+	//public List<string> collectedItems;
 	//public Dictionary<string, GameObject> collectedItems;
 
 
@@ -39,6 +40,7 @@ public class Player : MonoBehaviour
 		if (!IsDead) {
 			Fly();
 			PropelUp();
+			PropelDown();
 			FlipDirection();
 		}
 	}
@@ -72,9 +74,14 @@ public class Player : MonoBehaviour
 
 	private void PropelUp()
 	{
-		if (Input.GetButtonDown("Jump")){ 
-			Vector2 boostVelocity = new Vector2(0f, boostSpeed);
-			myRigidbody2D.velocity += boostVelocity;
+		if (Input.GetButtonDown("Jump")) {
+			if (myRigidbody2D.velocity.y <= 15) {
+				Vector2 boostVelocity = new Vector2(0f, boostSpeed);
+				myRigidbody2D.velocity += boostVelocity;
+			}
+		}
+		else if(myRigidbody2D.velocity.y >= 5) {
+			myRigidbody2D.AddRelativeForce(-myRigidbody2D.velocity/5);
 		}
 
 		if (Input.GetButton("Fire1")) {
@@ -89,6 +96,15 @@ public class Player : MonoBehaviour
 		}
 		else {
 			myRigidbody2D.gravityScale = startingGravityScale;
+		}
+	}
+
+	private void PropelDown() {
+		if (Input.GetButtonDown("Fire2")) {
+			if (myRigidbody2D.velocity.y >= -10) {
+				Vector2 droptVelocity = new Vector2(0f, dropSpeed);
+				myRigidbody2D.velocity -= droptVelocity;
+			}
 		}
 	}
 
@@ -125,7 +141,7 @@ public class Player : MonoBehaviour
 		if (collision.gameObject.tag == "Item") {
 			print("Item " + collision.gameObject.name);
 			//collectedItems.Add(collision.gameObject.name, collision.gameObject);
-			collectedItems.Add(collision.gameObject.name);
+			GameController.instance.CollectItems(collision.gameObject.name);
 			Destroy(collision.gameObject);
 		}
 	}

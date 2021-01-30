@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
 	[SerializeField] private GameObject itemPanel;
 	[SerializeField] private GameObject[] items = new GameObject[4];
 
+	public List<string> collectedItems;
+
 	public GameObject playerGO;
 	public GameObject spawnPoint;
 
@@ -72,6 +74,14 @@ public class GameController : MonoBehaviour
 		scoreText.text = score.ToString();
 	}
 
+	public void CollectItems(string itemName) {
+		GameCanvasController gameCanvasController = FindObjectOfType<GameCanvasController>();
+		gameCanvasController.AddCollectedItem(itemName);
+
+		collectedItems.Add(itemName);
+
+	}
+
 	public void StartGame()
 	{
 		lives = 3;
@@ -80,7 +90,7 @@ public class GameController : MonoBehaviour
 		score = 0;
 		//scoreText.text = score.ToString();
 
-		StartCoroutine(LoadScene(1));
+		StartCoroutine(LoadScene(2));
 
 	}
 
@@ -93,7 +103,7 @@ public class GameController : MonoBehaviour
 		Vector3 spawnPointLocation = new Vector3(PlayerPrefsManager.GetPlayerSpawnpointX(), PlayerPrefsManager.GetPlayerSpawnpointY(), 0);
 		//spawnPoint.transform.position = spawnPointLocation;
 
-		StartCoroutine(LoadScene(1));
+		StartCoroutine(LoadScene(2));
 
 		//livesText.text = lives.ToString();
 		//scoreText.text = score.ToString();
