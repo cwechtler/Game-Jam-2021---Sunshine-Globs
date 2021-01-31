@@ -9,12 +9,14 @@ public class SoundManager : MonoBehaviour {
 	[SerializeField] private AudioSource MusicAudioSource;
 	[SerializeField] private AudioSource SFXAudioSource;
 	[SerializeField] private AudioSource ambientAudioSource;
+	[SerializeField] private AudioSource environmentAmbient;
 
 	[SerializeField] private AudioClip[] music;
 	[SerializeField] private AudioClip[] ambientClips;
 	[SerializeField] private AudioClip[] movementClips;
-	[SerializeField] private AudioClip[] collectClips;
+	[SerializeField] private AudioClip[] bubbleClips;
 	[Space]
+	[SerializeField] private AudioClip collectClip;
 	[SerializeField] private AudioClip buttonClick;
    
 	private float audioVolume = 1f;
@@ -29,7 +31,25 @@ public class SoundManager : MonoBehaviour {
 		}
 	}
 
+	private void Start()
+	{
+		if (PlayerPrefs.HasKey("master_volume")) {
+			ChangeMasterVolume(PlayerPrefsManager.GetMasterVolume());
+		}
+
+		if (PlayerPrefs.HasKey("music_volume")) {
+			ChangeMusicVolume(PlayerPrefsManager.GetMusicVolume());
+		}
+
+		if (PlayerPrefs.HasKey("sfx_volume")) {
+			ChangeSFXVolume(PlayerPrefsManager.GetSFXVolume());
+		}
+	}
+
 	private void Update(){
+		if (ambientAudioSource.isPlaying) {
+
+		}
 		PlayRandomAmbient();
 		MusicSelect();
 		VolumeFadeIn(MusicAudioSource);   
@@ -73,11 +93,12 @@ public class SoundManager : MonoBehaviour {
 				break;
 
 			case "Options":
-				MusicAudioSource.clip = music[1];
+				MusicAudioSource.clip = music[0];
 				break;
 
 			case "Game Level 1":
-				MusicAudioSource.clip = music[0];
+				MusicAudioSource.clip = music[1];
+				environmentAmbient.Play();
 				break;
 
 			default:
@@ -102,17 +123,20 @@ public class SoundManager : MonoBehaviour {
 		SFXAudioSource.PlayOneShot(buttonClick, .6f);
 	}
 
-	public void PlayJump() {
-		int clip = Random.Range(0, movementClips.Length);
-		SFXAudioSource.PlayOneShot(movementClips[clip], .2f);
+	public void PlayBoostClip() {
+		SFXAudioSource.PlayOneShot(movementClips[1], .2f);
+	}
+
+	public void PlayDropClip()
+	{
+		SFXAudioSource.PlayOneShot(movementClips[2], .2f);
 	}
 
 	public void PlayCollectClip() {
-		SFXAudioSource.PlayOneShot(collectClips[0], .3f);
+		SFXAudioSource.PlayOneShot(collectClip, .3f);
 	}
 
 	public void ChangeMasterVolume(float volume) {
-		print("Change Master");
 		audioMixer.SetFloat("Master", volume);
 		if (volume == -40f){
 			audioMixer.SetFloat("Master", -80f);

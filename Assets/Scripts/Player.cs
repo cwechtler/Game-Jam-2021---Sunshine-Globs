@@ -17,12 +17,8 @@ public class Player : MonoBehaviour
 	bool moveHorizontaly;
 	bool moveVertically;
 
-	public static bool IsDead { get; set; } = false;
-
 	void Start()
 	{
-		IsDead = false;
-
 		myRigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		myCircleCollider2D = GetComponent<CircleCollider2D>();
@@ -33,31 +29,16 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
-		if (!IsDead) {
-			Fly();
-			PropelUp();
-			PropelDown();
-			FlipDirection();
-		}
+		Fly();
+		PropelUp();
+		PropelDown();
+		FlipDirection();
 	}
 
 	public void Respawn()
 	{
 		GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
 		myRigidbody2D.isKinematic = false;
-		IsDead = false;
-	}
-
-	private void Playerdeath()
-	{
-		if (!IsDead) {
-			//if (!myBoxCollider2D.IsTouchingLayers(LayerMask.GetMask("Water"))) {
-			//	myRigidbody2D.velocity = new Vector2(0, 0);
-			//	myRigidbody2D.isKinematic = true;
-			//}
-			GameController.instance.TakeLife();
-		}
-		IsDead = true;
 	}
 
 	private void Fly()
@@ -74,6 +55,7 @@ public class Player : MonoBehaviour
 			if (myRigidbody2D.velocity.y <= 15) {
 				Vector2 boostVelocity = new Vector2(0f, boostSpeed);
 				myRigidbody2D.velocity += boostVelocity;
+				SoundManager.instance.PlayBoostClip();
 			}
 		}
 		else if(myRigidbody2D.velocity.y >= 5) {
@@ -100,6 +82,7 @@ public class Player : MonoBehaviour
 			if (myRigidbody2D.velocity.y >= -10) {
 				Vector2 droptVelocity = new Vector2(0f, dropSpeed);
 				myRigidbody2D.velocity -= droptVelocity;
+				SoundManager.instance.PlayDropClip();
 			}
 		}
 	}
@@ -122,24 +105,16 @@ public class Player : MonoBehaviour
 	private void OnCollisionEnter2D(Collision2D collision)
 	{	
 		if (collision.gameObject.tag == "Enemy" || myCircleCollider2D.IsTouchingLayers(LayerMask.GetMask("Hazzard"))) {
-			Playerdeath();
+			
 		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.tag == "Hazzard") {
-			Playerdeath();
-		}
-
 		if (collision.gameObject.tag == "Item") {
 			GameController.instance.CollectItems(collision.gameObject.name);
+			SoundManager.instance.PlayCollectClip();
 			Destroy(collision.gameObject);
 		}
-	}
-
-	private void SetGameObjectInActive()  //Called from event in Die animation
-	{
-		gameObject.SetActive(false);
 	}
 }

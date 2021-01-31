@@ -26,10 +26,6 @@ public class LevelManager : MonoBehaviour {
 			currentScene = SceneManager.GetActiveScene().name;
 		}
 
-		if (Input.GetButtonDown("Cancel"))
-		{
-			QuitRequest();
-		}
 		if (Input.GetButtonDown("Submit") && currentScene != "Level 1")
 		{
 			button = true;
@@ -71,6 +67,7 @@ public class LevelManager : MonoBehaviour {
 	
 	public void QuitRequest () {
 		Debug.Log("Level Quit Request");
+		
 		Application.Quit();
 	}
 	

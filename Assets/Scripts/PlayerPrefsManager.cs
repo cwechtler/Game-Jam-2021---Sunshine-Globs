@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class PlayerPrefsManager : MonoBehaviour {
 
 	const string MASTER_VOLUME_KEY = "master_volume";
 	const string MUSIC_VOLUME_KEY = "music_volume";
 	const string SFX_VOLUME_KEY = "sfx_volume";
-	const string SCORE_KEY = "score";
-	const string PLAYER_LIVES_KEY = "player_lives";
+	const string ITEMS_KEY = "items";
 	const string PLAYER_SPAWNPOINTX_KEY = "player_spawnpointX";
 	const string PLAYER_SPAWNPOINTY_KEY = "player_spawnpointY";
 
@@ -49,47 +50,41 @@ public class PlayerPrefsManager : MonoBehaviour {
 		return PlayerPrefs.GetFloat(SFX_VOLUME_KEY);
 	}
 
-	public static void SetScore(int score)
+	public static void SetItems(string items)
 	{
-		PlayerPrefs.SetInt(SCORE_KEY, score);
+		PlayerPrefs.SetString(ITEMS_KEY, items);
 	}
 
-	public static int GetScore() {
-		return PlayerPrefs.GetInt(SCORE_KEY);
+	public static string GetItems() {
+		return PlayerPrefs.GetString(ITEMS_KEY);
 	}
 
-	public static void SetPlayerLives(int playerLives){
-		PlayerPrefs.SetInt(PLAYER_LIVES_KEY, playerLives);
+	public static void SetPlayerSpawnpointX(float playerSpawnpointX){
+		PlayerPrefs.SetFloat(PLAYER_SPAWNPOINTX_KEY, playerSpawnpointX);
 	}
 
-	public static int GetPlayerLives(){
-		return PlayerPrefs.GetInt(PLAYER_LIVES_KEY);
-	}
-
-	public static void SetPlayerSpawnpointX(int playerSpawnpointX){
-		PlayerPrefs.SetInt(PLAYER_SPAWNPOINTX_KEY, playerSpawnpointX);
-	}
-
-	public static int GetPlayerSpawnpointX()
+	public static float GetPlayerSpawnpointX()
 	{
-		return PlayerPrefs.GetInt(PLAYER_SPAWNPOINTX_KEY);
+		return PlayerPrefs.GetFloat(PLAYER_SPAWNPOINTX_KEY);
 	}
 
-	public static void SetPlayerSpawnpointY(int playerSpawnpointY)
+	public static void SetPlayerSpawnpointY(float playerSpawnpointY)
 	{
-		PlayerPrefs.SetInt(PLAYER_SPAWNPOINTY_KEY, playerSpawnpointY);
+		PlayerPrefs.SetFloat(PLAYER_SPAWNPOINTY_KEY, playerSpawnpointY);
 	}
 
-	public static int GetPlayerSpawnpointY()
+	public static float GetPlayerSpawnpointY()
 	{
-		return PlayerPrefs.GetInt(PLAYER_SPAWNPOINTY_KEY);
+		return PlayerPrefs.GetFloat(PLAYER_SPAWNPOINTY_KEY);
 	}
 
-	public void DeleteAllPlayerPrefs() {
+	public static void DeleteAllPlayerPrefs() {
 		PlayerPrefs.DeleteAll();
 	}
 
-	public void DeletePlayerPrefsMusicKey(){
-		PlayerPrefs.DeleteKey("music_choice");
+	public static void DeletePlayerPrefsPlayerInfo(){
+		PlayerPrefs.DeleteKey(ITEMS_KEY);
+		PlayerPrefs.DeleteKey(PLAYER_SPAWNPOINTX_KEY);
+		PlayerPrefs.DeleteKey(PLAYER_SPAWNPOINTY_KEY);
 	}
 }

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameCanvasController : MonoBehaviour
 {
+	[SerializeField] private GameObject pausePanel;
+
 	[SerializeField] private GameObject collectedPanel;
 	[SerializeField] private GameObject[] itemCollectedPrefabs;
 
@@ -12,11 +14,16 @@ public class GameCanvasController : MonoBehaviour
 	private LevelManager levelManager;
 	private SoundManager soundManager;
 
-	void Start()
+	private void Start()
 	{
 		gameController = GameObject.FindObjectOfType<GameController>();
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		soundManager = GameObject.FindObjectOfType<SoundManager>();
+	}
+
+	private void Update()
+	{
+		PauseGame();
 	}
 
 	public void AddCollectedItem(string itemName) {
@@ -48,13 +55,29 @@ public class GameCanvasController : MonoBehaviour
 		}
 	}
 
-	public void StartGame()
+	public void PauseGame()
 	{
-		gameController.StartGame();
+		if (Input.GetButtonDown("Cancel")) {
+			Time.timeScale = 0;
+			pausePanel.SetActive(true);
+		}
 	}
 
-	public void ContinueGame()
+	public void ResumeGame()
 	{
-		gameController.Continue();
+		pausePanel.SetActive(false);
+		Time.timeScale = 1;
 	}
+
+	public void Options()
+	{
+		gameController.SavePlayerInfo();
+		levelManager.LoadOptions();
+	}
+
+	public void QuitGame() {
+		GameController.instance.SavePlayerInfo();
+		levelManager.LoadLevel("Main Menu");
+	}
+
 }
