@@ -120,12 +120,10 @@ public class Player : MonoBehaviour
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
-	{
+	{	
 		if (collision.gameObject.tag == "Enemy" || myCircleCollider2D.IsTouchingLayers(LayerMask.GetMask("Hazzard"))) {
 			Playerdeath();
 		}
-
-
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
