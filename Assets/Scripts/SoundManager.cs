@@ -8,14 +8,17 @@ public class SoundManager : MonoBehaviour {
 	[SerializeField] private AudioMixer audioMixer;
 	[SerializeField] private AudioSource MusicAudioSource;
 	[SerializeField] private AudioSource SFXAudioSource;
+	[SerializeField] private AudioSource ambientAudioSource;
 
 	[SerializeField] private AudioClip[] music;
-	[SerializeField] private AudioClip[] jumpClips;
+	[SerializeField] private AudioClip[] ambientClips;
+	[SerializeField] private AudioClip[] movementClips;
+	[SerializeField] private AudioClip[] collectClips;
 	[Space]
-	[SerializeField] private AudioClip collectClip;
 	[SerializeField] private AudioClip buttonClick;
    
 	private float audioVolume = 1f;
+	private int clipIndex = 0;
 
 	void Awake(){
 		if (instance != null){
@@ -27,6 +30,7 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	private void Update(){
+		PlayRandomAmbient();
 		MusicSelect();
 		VolumeFadeIn(MusicAudioSource);   
 	}
@@ -81,6 +85,15 @@ public class SoundManager : MonoBehaviour {
 		}
 	}
 
+
+	void PlayRandomAmbient()
+	{
+		if (!ambientAudioSource.isPlaying) {
+			clipIndex = Random.Range(0, ambientClips.Length);
+			ambientAudioSource.PlayOneShot(ambientClips[clipIndex]);
+		}
+	}
+
 	public void StartAudio(){
 		MusicAudioSource.Play();
 	}
@@ -90,12 +103,12 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void PlayJump() {
-		int clip = Random.Range(0, jumpClips.Length);
-		SFXAudioSource.PlayOneShot(jumpClips[clip], .2f);
+		int clip = Random.Range(0, movementClips.Length);
+		SFXAudioSource.PlayOneShot(movementClips[clip], .2f);
 	}
 
 	public void PlayCollectClip() {
-		SFXAudioSource.PlayOneShot(collectClip, .3f);
+		SFXAudioSource.PlayOneShot(collectClips[0], .3f);
 	}
 
 	public void ChangeMasterVolume(float volume) {
