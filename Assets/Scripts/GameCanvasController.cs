@@ -2,23 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameCanvasController : MonoBehaviour
 {
 	[SerializeField] private GameObject pausePanel;
-
+	[Space]
+	[SerializeField] private TextMeshProUGUI collectionTextPanel;
 	[SerializeField] private GameObject collectedPanel;
 	[SerializeField] private GameObject[] itemCollectedPrefabs;
 
 	private GameController gameController;
 	private LevelManager levelManager;
 	private SoundManager soundManager;
+	private TextMeshProUGUI collectionText;
 
 	private void Start()
 	{
 		gameController = GameObject.FindObjectOfType<GameController>();
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		soundManager = GameObject.FindObjectOfType<SoundManager>();
+		collectionText = collectionTextPanel.GetComponent<TextMeshProUGUI>();
 	}
 
 	private void Update()
@@ -27,6 +31,9 @@ public class GameCanvasController : MonoBehaviour
 	}
 
 	public void AddCollectedItem(string itemName) {
+
+		print(gameController.collectedItems.Count);
+		collectionText.text = gameController.collectedItems.Count + " of 4";
 
 		switch (itemName) {
 			case "Red":
@@ -53,6 +60,7 @@ public class GameCanvasController : MonoBehaviour
 			default:
 				break;
 		}
+		print(gameController.collectedItems.Count);
 	}
 
 	public void PauseGame()

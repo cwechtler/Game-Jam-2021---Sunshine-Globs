@@ -9,16 +9,16 @@ public class SoundManager : MonoBehaviour {
 	[SerializeField] private AudioSource MusicAudioSource;
 	[SerializeField] private AudioSource SFXAudioSource;
 	[SerializeField] private AudioSource ambientAudioSource;
-	[SerializeField] private AudioSource environmentAmbient;
-
+	[SerializeField] private AudioSource environmentAmbient;	
+	[Space]
 	[SerializeField] private AudioClip[] music;
 	[SerializeField] private AudioClip[] ambientClips;
 	[SerializeField] private AudioClip[] movementClips;
-	[SerializeField] private AudioClip[] bubbleClips;
 	[Space]
 	[SerializeField] private AudioClip collectClip;
 	[SerializeField] private AudioClip buttonClick;
-   
+	[SerializeField] private AudioClip bubbleClip;
+
 	private float audioVolume = 1f;
 	private int clipIndex = 0;
 
@@ -134,6 +134,10 @@ public class SoundManager : MonoBehaviour {
 
 	public void PlayCollectClip() {
 		SFXAudioSource.PlayOneShot(collectClip, .3f);
+	}
+
+	public void BubbleImpactClip() {
+		SFXAudioSource.PlayOneShot(bubbleClip, .3f);
 	}
 
 	public void ChangeMasterVolume(float volume) {

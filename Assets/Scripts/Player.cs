@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 	SpriteRenderer spriteRenderer;
 	CircleCollider2D myCircleCollider2D;
 	BoxCollider2D myBoxCollider2D;
+	AudioSource playerAudioSource;
 
 	float startingGravityScale;
 	bool moveHorizontaly;
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		myCircleCollider2D = GetComponent<CircleCollider2D>();
 		myBoxCollider2D = GetComponent<BoxCollider2D>();
+		playerAudioSource = GetComponent<AudioSource>();
 
 		startingGravityScale = myRigidbody2D.gravityScale;
 	}
@@ -44,6 +46,14 @@ public class Player : MonoBehaviour
 	private void Fly()
 	{
 		float running = Input.GetAxis("Horizontal");
+		if (running > 0 || running < 0) {
+			if (!playerAudioSource.isPlaying) {
+				playerAudioSource.Play();
+			}
+		}
+		else {
+			playerAudioSource.Stop();
+		}
 		Vector2 playerVelocity = new Vector2(running * movementSpeed, myRigidbody2D.velocity.y);
 		myRigidbody2D.velocity = playerVelocity;
 		moveHorizontaly = Mathf.Abs(myRigidbody2D.velocity.x) > Mathf.Epsilon;
@@ -104,8 +114,8 @@ public class Player : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{	
-		if (collision.gameObject.tag == "Enemy" || myCircleCollider2D.IsTouchingLayers(LayerMask.GetMask("Hazzard"))) {
-			
+		if (collision.gameObject.tag == "Bubble") {
+			SoundManager.instance.BubbleImpactClip();
 		}
 	}
 

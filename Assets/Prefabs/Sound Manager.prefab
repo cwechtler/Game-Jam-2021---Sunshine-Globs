@@ -55,7 +55,7 @@ MonoBehaviour:
   environmentAmbient: {fileID: 1322459124}
   music:
   - {fileID: 8300000, guid: b163845b61ffc66478ac187a7d53f440, type: 3}
-  - {fileID: 8300000, guid: d55f367e412838a48bfb70de7d75c2c4, type: 3}
+  - {fileID: 8300000, guid: 6642cf42ca1977443b49698a3e2a85a0, type: 3}
   ambientClips:
   - {fileID: 8300000, guid: dcaed9ea83f91fa4fb397357bca7f7cd, type: 3}
   - {fileID: 8300000, guid: 7171c74bb2ba18b46a80a46d86de2852, type: 3}
@@ -65,11 +65,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 65496efc0adf6844db9242181f9a2b76, type: 3}
   - {fileID: 8300000, guid: 16d513fbb341b074d9b990ffeb866163, type: 3}
   - {fileID: 8300000, guid: d5f85a5d26b4e244080400fa377f98db, type: 3}
-  bubbleClips:
-  - {fileID: 8300000, guid: 1dd755111398bd94191e5693acfb6792, type: 3}
-  - {fileID: 8300000, guid: a34afa58dde69cb44a10741daf8e4878, type: 3}
   collectClip: {fileID: 8300000, guid: 8fac9ef1a16f0aa458164acbf189afbb, type: 3}
   buttonClick: {fileID: 8300000, guid: 2cf926c1039d0884aa3ebcf4ca7481ef, type: 3}
+  bubbleClip: {fileID: 8300000, guid: a34afa58dde69cb44a10741daf8e4878, type: 3}
 --- !u!82 &1178935276
 AudioSource:
   m_ObjectHideFlags: 0

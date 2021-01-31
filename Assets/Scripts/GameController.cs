@@ -50,10 +50,9 @@ public class GameController : MonoBehaviour
 
 	public void CollectItems(string itemName) {
 		GameCanvasController gameCanvasController = FindObjectOfType<GameCanvasController>();
-		gameCanvasController.AddCollectedItem(itemName);
-
 		collectedItems.Add(itemName);
 
+		gameCanvasController.AddCollectedItem(itemName);
 	}
 
 	public void StartGame()
