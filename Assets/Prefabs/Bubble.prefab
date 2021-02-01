@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1591759780775005292}
   - component: {fileID: -6375035222153662222}
   - component: {fileID: 4869820914879834987}
+  - component: {fileID: 4423116546559959463}
   m_Layer: 9
   m_Name: Bubble
   m_TagString: Bubble
@@ -135,14 +136,14 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -1257869586140105328, guid: 29ca4c2f74a96e244b1f9e3c2f9a953c, type: 2}
   m_audioClip: {fileID: 8300000, guid: b18b6594cf2e23f43890e21380f8f989, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.31
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 10
   Pan2D: 0
@@ -237,3 +238,22 @@ MonoBehaviour:
   maxBoostSpeed: 10
   moveDirectionDeviation: 0.35
   collisionsAllowed: 50
+--- !u!95 &4423116546559959463
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591759780775005295}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8f2a8a01c077a6541bc57864274484ca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

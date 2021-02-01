@@ -7,6 +7,10 @@ public class Player : MonoBehaviour
 	[SerializeField] private float movementSpeed = 5f;
 	[SerializeField] private float boostSpeed = 15f;
 	[SerializeField] private float dropSpeed = .5f;
+	[Space]
+	[SerializeField] private float maxBoostSpeed = 15f;
+	[SerializeField] private float maxDropSpeed = 10f;
+
 
 	Rigidbody2D myRigidbody2D;
 	SpriteRenderer spriteRenderer;
@@ -62,7 +66,7 @@ public class Player : MonoBehaviour
 	private void PropelUp()
 	{
 		if (Input.GetButtonDown("Jump")) {
-			if (myRigidbody2D.velocity.y <= 15) {
+			if (myRigidbody2D.velocity.y <= maxBoostSpeed) {
 				Vector2 boostVelocity = new Vector2(0f, boostSpeed);
 				myRigidbody2D.velocity += boostVelocity;
 				SoundManager.instance.PlayBoostClip();
@@ -89,7 +93,7 @@ public class Player : MonoBehaviour
 
 	private void PropelDown() {
 		if (Input.GetButtonDown("Fire2")) {
-			if (myRigidbody2D.velocity.y >= -10) {
+			if (myRigidbody2D.velocity.y >= -maxDropSpeed) {
 				Vector2 droptVelocity = new Vector2(0f, dropSpeed);
 				myRigidbody2D.velocity -= droptVelocity;
 				SoundManager.instance.PlayDropClip();
@@ -122,6 +126,7 @@ public class Player : MonoBehaviour
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.gameObject.tag == "Item") {
+			print("Item Picked up");
 			GameController.instance.CollectItems(collision.gameObject.name);
 			SoundManager.instance.PlayCollectClip();
 			Destroy(collision.gameObject);

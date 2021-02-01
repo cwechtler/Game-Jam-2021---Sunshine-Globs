@@ -32,8 +32,7 @@ public class GameCanvasController : MonoBehaviour
 
 	public void AddCollectedItem(string itemName) {
 
-		print(gameController.collectedItems.Count);
-		collectionText.text = gameController.collectedItems.Count + " of 4";
+		collectionText.text = GameController.instance.collectedItems.Count + " of 4";
 
 		switch (itemName) {
 			case "Red":
@@ -60,7 +59,7 @@ public class GameCanvasController : MonoBehaviour
 			default:
 				break;
 		}
-		print(gameController.collectedItems.Count);
+		print(GameController.instance.collectedItems.Count);
 	}
 
 	public void PauseGame()
@@ -79,7 +78,7 @@ public class GameCanvasController : MonoBehaviour
 
 	public void Options()
 	{
-		gameController.SavePlayerInfo();
+		GameController.instance.SavePlayerInfo();
 		levelManager.LoadOptions();
 	}
 

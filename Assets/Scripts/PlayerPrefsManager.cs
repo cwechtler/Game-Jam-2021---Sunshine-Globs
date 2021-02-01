@@ -11,7 +11,6 @@ public class PlayerPrefsManager : MonoBehaviour {
 	const string PLAYER_SPAWNPOINTX_KEY = "player_spawnpointX";
 	const string PLAYER_SPAWNPOINTY_KEY = "player_spawnpointY";
 
-
 	public static void SetMasterVolume(float volume) {
 		if (volume >= -40f && volume <= 1.000001f)
 		{
@@ -50,13 +49,25 @@ public class PlayerPrefsManager : MonoBehaviour {
 		return PlayerPrefs.GetFloat(SFX_VOLUME_KEY);
 	}
 
-	public static void SetItems(string items)
+	public static void SetItems(List<string> items)
 	{
-		PlayerPrefs.SetString(ITEMS_KEY, items);
+		print("PrefsItems " + items.Count);
+		for (int i = 0; i < items.Count; i++) {
+			PlayerPrefs.SetString("items " + i, items[i]);
+		}
+		
 	}
 
-	public static string GetItems() {
-		return PlayerPrefs.GetString(ITEMS_KEY);
+	public static List<string> GetItems() {
+		List<string> newItemsList = new List<string>();
+
+		for (int i = 0; i < 4; i++) {
+			if (PlayerPrefs.HasKey("items " + i)) {
+				newItemsList.Add(PlayerPrefs.GetString(PlayerPrefs.GetString("items " + i)));
+			}
+		}
+
+		return newItemsList;
 	}
 
 	public static void SetPlayerSpawnpointX(float playerSpawnpointX){

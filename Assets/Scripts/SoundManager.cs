@@ -9,7 +9,6 @@ public class SoundManager : MonoBehaviour {
 	[SerializeField] private AudioSource MusicAudioSource;
 	[SerializeField] private AudioSource SFXAudioSource;
 	[SerializeField] private AudioSource ambientAudioSource;
-	[SerializeField] private AudioSource environmentAmbient;	
 	[Space]
 	[SerializeField] private AudioClip[] music;
 	[SerializeField] private AudioClip[] ambientClips;
@@ -98,7 +97,10 @@ public class SoundManager : MonoBehaviour {
 
 			case "Game Level 1":
 				MusicAudioSource.clip = music[1];
-				environmentAmbient.Play();
+				break;
+
+			case "Finish":
+				MusicAudioSource.clip = music[2];
 				break;
 
 			default:
@@ -137,7 +139,7 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void BubbleImpactClip() {
-		SFXAudioSource.PlayOneShot(bubbleClip, .3f);
+		SFXAudioSource.PlayOneShot(bubbleClip, .5f);
 	}
 
 	public void ChangeMasterVolume(float volume) {

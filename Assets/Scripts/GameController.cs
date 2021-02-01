@@ -49,10 +49,18 @@ public class GameController : MonoBehaviour
 	}
 
 	public void CollectItems(string itemName) {
-		GameCanvasController gameCanvasController = FindObjectOfType<GameCanvasController>();
+		print("Item collected " + itemName);
 		collectedItems.Add(itemName);
+		GameCanvasController gameCanvasController = FindObjectOfType<GameCanvasController>();
 
 		gameCanvasController.AddCollectedItem(itemName);
+
+		if (collectedItems.Count == 4) {
+			LevelManager.Instance.LoadNextLevel();
+			collectedItems.Clear();
+		}
+		print("List # " + collectedItems.Count);
+
 	}
 
 	public void StartGame()
@@ -66,21 +74,19 @@ public class GameController : MonoBehaviour
 		print("Continue");
 		continueGame = true;
 
-		List<string> itemsString = PlayerPrefsManager.GetItems().Split(' ').ToList();
+		//List<string> itemsString = PlayerPrefsManager.GetItems();
 
-		collectedItems = itemsString;
-		print("items " + itemsString[0]);
+		//collectedItems = itemsString;
+		print("items " + PlayerPrefsManager.GetItems().Count);
 
 		Vector3 spawnPointLocation = new Vector3(PlayerPrefsManager.GetPlayerSpawnpointX(), PlayerPrefsManager.GetPlayerSpawnpointY(), 0);
 
-		StartCoroutine(LoadScene(2));
+		LevelManager.Instance.LoadLevel("Game Level 1");
+		//StartCoroutine(LoadScene(2));
 	}
 
 	public void SavePlayerInfo() {
-
-		string joinedCollectedItems = string.Join(" ", collectedItems);
-
-		PlayerPrefsManager.SetItems(joinedCollectedItems);
+		PlayerPrefsManager.SetItems(collectedItems);
 		PlayerPrefsManager.SetPlayerSpawnpointX(playerGO.transform.position.x);
 		PlayerPrefsManager.SetPlayerSpawnpointY(playerGO.transform.position.y);
 	}
@@ -90,6 +96,7 @@ public class GameController : MonoBehaviour
 	}
 
 	private IEnumerator LoadScene(int sceneToLoad) {
+		print("Load " + sceneToLoad);
 		yield return new WaitForSeconds(.3f);
 		SceneManager.LoadScene(sceneToLoad);
 
