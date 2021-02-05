@@ -126,7 +126,6 @@ public class Player : MonoBehaviour
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.gameObject.tag == "Item") {
-			print("Item Picked up");
 			GameController.instance.CollectItems(collision.gameObject.name);
 			SoundManager.instance.PlayCollectClip();
 			Destroy(collision.gameObject);

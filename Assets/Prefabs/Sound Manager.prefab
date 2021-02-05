@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f8eaf53a6da6d4bbb203d336774d3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeInTime: 0.014
+  fadeInTime: 0.5
   audioMixer: {fileID: 24100000, guid: 29ca4c2f74a96e244b1f9e3c2f9a953c, type: 2}
   MusicAudioSource: {fileID: 1178935276}
   SFXAudioSource: {fileID: 1178935275}

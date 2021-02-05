@@ -10,27 +10,32 @@ public class Bubble : MonoBehaviour
 	[SerializeField] private float maxBoostSpeed = 10f;
 	[SerializeField] private float moveDirectionDeviation = 0.35f;
 	[SerializeField] private int collisionsAllowed = 6;
-
+	[Space]
+	[SerializeField] private Transform childTransform;
 
 	private BubbleFactory factoryParent;
+	private GameObject bubbleAimDirection;
 	private bool isDead = false;
-
-	Rigidbody2D myRigidbody2D;
+	private Rigidbody2D myRigidbody2D;
 
 	void Start()
 	{
 		myRigidbody2D = GetComponent<Rigidbody2D>();
 
+		childTransform.transform.rotation = Quaternion.Inverse(bubbleAimDirection.transform.rotation);
+
 		// if new insance, set velocity of 1 toward local y-axis
 		if (myRigidbody2D.velocity.magnitude == 0) {
-			myRigidbody2D.velocity = this.transform.up;
+			myRigidbody2D.velocity = bubbleAimDirection.transform.up;
 		}
 
 		StartCoroutine(MoveBubble());
 	}
 
-	public void InitializeFromFactory(BubbleFactory factoryParent) {
-		this.factoryParent = factoryParent;
+	public void InitializeFromFactory(BubbleFactory _factoryParent, GameObject _bubbleAimDirection)
+	{
+		this.factoryParent = _factoryParent;
+		this.bubbleAimDirection = _bubbleAimDirection;
 	}
 
 	private IEnumerator MoveBubble() {

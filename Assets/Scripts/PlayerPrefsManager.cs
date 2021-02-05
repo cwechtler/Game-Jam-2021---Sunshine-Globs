@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerPrefsManager : MonoBehaviour {
@@ -51,9 +50,8 @@ public class PlayerPrefsManager : MonoBehaviour {
 
 	public static void SetItems(List<string> items)
 	{
-		print("PrefsItems " + items.Count);
 		for (int i = 0; i < items.Count; i++) {
-			PlayerPrefs.SetString("items " + i, items[i]);
+			PlayerPrefs.SetString("items" + i, items[i]);
 		}
 		
 	}
@@ -62,11 +60,10 @@ public class PlayerPrefsManager : MonoBehaviour {
 		List<string> newItemsList = new List<string>();
 
 		for (int i = 0; i < 4; i++) {
-			if (PlayerPrefs.HasKey("items " + i)) {
-				newItemsList.Add(PlayerPrefs.GetString(PlayerPrefs.GetString("items " + i)));
+			if (PlayerPrefs.HasKey("items" + i)) {
+				newItemsList.Add(PlayerPrefs.GetString("items" + i));
 			}
 		}
-
 		return newItemsList;
 	}
 
@@ -94,8 +91,23 @@ public class PlayerPrefsManager : MonoBehaviour {
 	}
 
 	public static void DeletePlayerPrefsPlayerInfo(){
-		PlayerPrefs.DeleteKey(ITEMS_KEY);
+		for (int i = 0; i < 4; i++) {
+			if (PlayerPrefs.HasKey("items" + i)) {
+				PlayerPrefs.DeleteKey("items" + i);
+			}
+		}
 		PlayerPrefs.DeleteKey(PLAYER_SPAWNPOINTX_KEY);
 		PlayerPrefs.DeleteKey(PLAYER_SPAWNPOINTY_KEY);
+	}
+
+	public static bool CanContinue() {
+
+		if (PlayerPrefs.HasKey("items0") || PlayerPrefs.HasKey(PLAYER_SPAWNPOINTX_KEY)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
 }

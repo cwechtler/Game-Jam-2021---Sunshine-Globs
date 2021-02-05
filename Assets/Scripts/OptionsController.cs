@@ -1,18 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class OptionsController : MonoBehaviour {
-
+	[SerializeField] private float panelFadeTime;
+	[Space]
 	[SerializeField] private Slider masterVolumeSlider;
 	[SerializeField] private Slider musicVolumeSlider;
 	[SerializeField] private Slider sfxVolumeSlider;
+	[Space]
+	[SerializeField] private GameObject canvasGroupPanel;
+	[SerializeField] private GameObject fadePanel;
 
-	private LevelManager levelManager;
-	private SoundManager soundManager;
-	
+	private CanvasGroup canvasGroup;
+	private Animator canvasGroupAnimator;
+	private Animator fadeAnimator;
+
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-		soundManager = GameObject.FindObjectOfType<SoundManager>();
+		fadeAnimator = fadePanel.GetComponent<Animator>();
+
+		if (GameController.instance.isPaused)
+		{
+			canvasGroup = canvasGroupPanel.GetComponent<CanvasGroup>();
+			canvasGroupAnimator = canvasGroupPanel.GetComponent<Animator>();
+			canvasGroupAnimator.SetBool("FadeIn", true);
+			
+		}
 
 		if (PlayerPrefs.HasKey ("master_volume")){
 			masterVolumeSlider.value = PlayerPrefsManager.GetMasterVolume ();
@@ -36,16 +50,26 @@ public class OptionsController : MonoBehaviour {
 	}
 	
 	void Update () {
-		soundManager.ChangeMasterVolume (masterVolumeSlider.value);
-		soundManager.ChangeMusicVolume(musicVolumeSlider.value);
-		soundManager.ChangeSFXVolume(sfxVolumeSlider.value);
+		SoundManager.instance.ChangeMasterVolume (masterVolumeSlider.value);
+		SoundManager.instance.ChangeMusicVolume(musicVolumeSlider.value);
+		SoundManager.instance.ChangeSFXVolume(sfxVolumeSlider.value);
 	}
 	
 	public void SaveAndExit(){
 		PlayerPrefsManager.SetMasterVolume (masterVolumeSlider.value);
 		PlayerPrefsManager.SetMusicVolume (musicVolumeSlider.value);
 		PlayerPrefsManager.SetSFXVolume(sfxVolumeSlider.value);
-		levelManager.LoadLevel ("Main Menu");
+
+		if (GameController.instance.isPaused)
+		{
+			GameCanvasController gameCanvasController = FindObjectOfType<GameCanvasController>();
+			gameCanvasController.FadeCanvas();
+			canvasGroupAnimator.SetBool("FadeIn", false);
+		}
+		else {
+			fadeAnimator.SetBool("FadeOut", true);
+			LevelManager.instance.LoadLevel(0, .9f);
+		}	
 	}
 	
 	public void SetDefaults(){

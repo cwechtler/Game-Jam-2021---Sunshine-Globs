@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class BubbleFactory : MonoBehaviour
 {
-	[SerializeField] private GameObject bubbleParent;
+	[SerializeField] private GameObject bubbleAimDirection;
+	[SerializeField] private GameObject growStartLocation;
 	[Space]
 	[SerializeField] private int numberOfBubbles = 3;
 	[SerializeField] private float spawnInterval = 2f;
 	[SerializeField] private GameObject bubblePrefab;
 
 	public int spawnedBubbles { get; set; } = 0;
+
+	private void Awake()
+	{
+		growStartLocation.SetActive(false);
+	}
 
 	void Start()
 	{
@@ -20,11 +26,11 @@ public class BubbleFactory : MonoBehaviour
 	private IEnumerator GenerateBubbles() {
 		for (;;) {
 			if (spawnedBubbles < numberOfBubbles) {
-				GameObject bubbleInstance = GameObject.Instantiate(bubblePrefab, this.transform.position, this.transform.rotation);
-				bubbleInstance.transform.SetParent(bubbleParent.transform);
+				GameObject bubbleInstance = GameObject.Instantiate(bubblePrefab, this.transform.position, bubbleAimDirection.transform.rotation);
+				bubbleInstance.transform.SetParent(bubbleAimDirection.transform);
 
 				Bubble bubbleReference = bubbleInstance.GetComponent<Bubble>();
-				bubbleReference.InitializeFromFactory(this);
+				bubbleReference.InitializeFromFactory(this, bubbleAimDirection);
 
 				spawnedBubbles++;
 			}

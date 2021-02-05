@@ -1,18 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
-	public static LevelManager Instance;
-	public string currentScene;
+
+	public static LevelManager instance = null;
+
+	public string currentScene { get; private set; }
 
 	private bool button;
 
 	private void Awake(){
-		if (Instance == null){
-			Instance = this;
+		if (instance == null){
+			instance = this;
 			DontDestroyOnLoad(this.gameObject);
 		}
-		else if (Instance != this){
+		else if (instance != this){
 			Destroy(gameObject);
 		}
 	}
@@ -25,55 +28,67 @@ public class LevelManager : MonoBehaviour {
 		if (SceneManager.GetActiveScene().name != currentScene) {
 			currentScene = SceneManager.GetActiveScene().name;
 		}
-
-		if (Input.GetButtonDown("Submit") && currentScene != "Level 1")
-		{
-			button = true;
-			LoadlevelbyCurrentScene();
-		}
 	}
 
-	public void LoadlevelbyCurrentScene(){
-		switch (currentScene){
-			case "Start Menu":
-				LoadLevel("Level 1");
-				break;
-			case "Lose":
-				LoadLevel("Start Menu");
-				break;
-			case "Win":
-				LoadLevel("Start Menu");
-				break;
-			default:
-				break;
-				
-		}
+	public void StartNewGame()
+	{
+		GameController.instance.StartGame();
+		StartCoroutine(LoadScene(3, .9f));
 	}
 
-	public void LoadOptions() {
-		LoadLevel("Options");
+	public void Continue()
+	{
+		GameController.instance.Continue();
 	}
 
 	public void LoadLevel (string name){
 		Debug.Log("Level load requested for: " + name);
 		SceneManager.LoadScene(name);
-		if (button)
-		{
-			SoundManager.instance.SetButtonClip();
-			button = false;
-		}
-
 	}
-	
-	public void QuitRequest () {
-		Debug.Log("Level Quit Request");
-		
-		Application.Quit();
+
+	public void LoadLevel(int levelIndex, float waitTime) {
+		StartCoroutine(LoadScene(levelIndex, waitTime));
+	}
+
+	public void LoadLevelAdditive(string name) {
+		SceneManager.LoadScene(name, LoadSceneMode.Additive);
 	}
 	
 	public void LoadNextLevel() {
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+		StartCoroutine(LoadScene(SceneManager.GetActiveScene().buildIndex + 1, .9f));
 		SoundManager.instance.SetButtonClip();
 		currentScene = SceneManager.GetSceneByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1).name;
+	}
+
+	private IEnumerator LoadScene(int sceneToLoad, float waitTime)
+	{
+		print("Load " + sceneToLoad);
+		yield return new WaitForSeconds(waitTime);
+		AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneToLoad);
+		yield return new WaitUntil(() => asyncOperation.isDone);
+		print("Scene " + currentScene + " Loaded");
+		//if (currentScene == "Game Level 1") {
+		//	GameController.instance.LoadSceneObjects();
+		//}	
+	}
+
+	public IEnumerator UnloadScene(float waitTime, string name)
+	{
+		float counter = 0f;
+
+		while (counter < waitTime) {
+			counter += GameController.instance.timeDeltaTime;
+		}
+		if (counter >= waitTime) {
+			print("Unload");
+			SceneManager.UnloadSceneAsync(name);
+		}
+		yield return null;
+	}
+
+	public void QuitRequest()
+	{
+		Debug.Log("Level Quit Request");
+		Application.Quit();
 	}
 }

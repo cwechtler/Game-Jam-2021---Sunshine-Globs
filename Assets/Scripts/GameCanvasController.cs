@@ -1,33 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using Cinemachine;
 
 public class GameCanvasController : MonoBehaviour
 {
+	[SerializeField] private CinemachineVirtualCamera VCinemachineCamera;
 	[SerializeField] private GameObject pausePanel;
+	[SerializeField] private GameObject pauseButtonsPanel;
 	[Space]
 	[SerializeField] private TextMeshProUGUI collectionTextPanel;
 	[SerializeField] private GameObject collectedPanel;
 	[SerializeField] private GameObject[] itemCollectedPrefabs;
 
-	private GameController gameController;
-	private LevelManager levelManager;
-	private SoundManager soundManager;
 	private TextMeshProUGUI collectionText;
+	private CanvasGroup canvasGroup;
+	private Animator pausePanelAnimator;
+
+	private void Awake()
+	{
+		GameController.instance.LoadSceneObjects();
+		VCinemachineCamera.Follow = GameController.instance.playerGO.transform;
+	}
 
 	private void Start()
-	{
-		gameController = GameObject.FindObjectOfType<GameController>();
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-		soundManager = GameObject.FindObjectOfType<SoundManager>();
+	{	
 		collectionText = collectionTextPanel.GetComponent<TextMeshProUGUI>();
+		canvasGroup = pauseButtonsPanel.GetComponent<CanvasGroup>();
+		pausePanelAnimator = pauseButtonsPanel.GetComponent<Animator>();
+
+		if (GameController.instance.collectedItems.Count > 0) {
+			GameObject[] Items = GameObject.FindGameObjectsWithTag("Item");
+
+			foreach (var collectedItem in GameController.instance.collectedItems) {
+				AddCollectedItem(collectedItem);
+				foreach (var item in Items) {
+					if (item.name == collectedItem) {
+						Destroy(item);
+					}
+				}
+			}
+		}
 	}
 
 	private void Update()
 	{
 		PauseGame();
+	}
+
+	private void InstantiateItem(GameObject prefab) {
+		GameObject itemCollected = GameObject.Instantiate(prefab);
+		itemCollected.transform.SetParent(collectedPanel.transform, true);
+		itemCollected.transform.localScale = Vector3.one;
 	}
 
 	public void AddCollectedItem(string itemName) {
@@ -36,55 +61,50 @@ public class GameCanvasController : MonoBehaviour
 
 		switch (itemName) {
 			case "Red":
-				print ("Red");
-				GameObject redItemCollected = GameObject.Instantiate(itemCollectedPrefabs[0]);
-				redItemCollected.transform.SetParent(collectedPanel.transform, true);
-				redItemCollected.transform.localScale = Vector3.one;
+				InstantiateItem(itemCollectedPrefabs[0]);
 				break;
 			case "Purple":
-				GameObject purpleItemCollected = GameObject.Instantiate(itemCollectedPrefabs[1]);
-				purpleItemCollected.transform.SetParent(collectedPanel.transform, true);
-				purpleItemCollected.transform.localScale = Vector3.one;
+				InstantiateItem(itemCollectedPrefabs[1]);
 				break;
 			case "Orange":
-				GameObject orangeItemCollected = GameObject.Instantiate(itemCollectedPrefabs[2]);
-				orangeItemCollected.transform.SetParent(collectedPanel.transform, true);
-				orangeItemCollected.transform.localScale = Vector3.one;
+				InstantiateItem(itemCollectedPrefabs[2]);
 				break;
 			case "Green":
-				GameObject greenItemCollected = GameObject.Instantiate(itemCollectedPrefabs[3]);
-				greenItemCollected.transform.SetParent(collectedPanel.transform, true);
-				greenItemCollected.transform.localScale = Vector3.one;
+				InstantiateItem(itemCollectedPrefabs[3]);
 				break;
 			default:
 				break;
 		}
-		print(GameController.instance.collectedItems.Count);
 	}
 
 	public void PauseGame()
 	{
 		if (Input.GetButtonDown("Cancel")) {
-			Time.timeScale = 0;
-			pausePanel.SetActive(true);
+			GameController.instance.PauseGame();
+			pausePanel.SetActive(true);		
+			pausePanelAnimator.SetBool("FadeIn", true);
 		}
 	}
 
 	public void ResumeGame()
 	{
 		pausePanel.SetActive(false);
-		Time.timeScale = 1;
+		GameController.instance.ResumeGame();
 	}
 
 	public void Options()
 	{
-		GameController.instance.SavePlayerInfo();
-		levelManager.LoadOptions();
+		LevelManager.instance.LoadLevelAdditive("Options Additive Load");
+		pausePanelAnimator.SetBool("FadeIn", false);
+	}
+
+	public void FadeCanvas() {
+		pausePanelAnimator.SetBool("FadeIn", true);
 	}
 
 	public void QuitGame() {
 		GameController.instance.SavePlayerInfo();
-		levelManager.LoadLevel("Main Menu");
+		LevelManager.instance.LoadLevel(0, .9f);
+		GameController.instance.ResumeGame();
 	}
-
 }

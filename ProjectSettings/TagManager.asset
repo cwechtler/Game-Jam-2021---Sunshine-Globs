@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Item
   - Bubble
+  - Collected Panel
+  - Fade Panel
   layers:
   - Default
   - TransparentFX

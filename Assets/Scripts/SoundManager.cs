@@ -86,7 +86,7 @@ public class SoundManager : MonoBehaviour {
 
 	public void MusicSelect()
 	{
-		switch (LevelManager.Instance.currentScene) {
+		switch (LevelManager.instance.currentScene) {
 			case "Main Menu":
 				MusicAudioSource.clip = music[0];
 				break;
