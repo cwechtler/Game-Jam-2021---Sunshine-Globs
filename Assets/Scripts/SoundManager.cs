@@ -17,6 +17,8 @@ public class SoundManager : MonoBehaviour {
 	[SerializeField] private AudioClip collectClip;
 	[SerializeField] private AudioClip buttonClick;
 	[SerializeField] private AudioClip bubbleClip;
+	[SerializeField] private AudioClip[] bubblePops;
+
 
 	private float audioVolume = 1f;
 	private int clipIndex = 0;
@@ -140,6 +142,11 @@ public class SoundManager : MonoBehaviour {
 
 	public void BubbleImpactClip() {
 		SFXAudioSource.PlayOneShot(bubbleClip, .5f);
+	}
+
+	public AudioClip BubblePop() {
+		int clip = Random.Range(0, bubblePops.Length);
+		return bubblePops[clip];
 	}
 
 	public void ChangeMasterVolume(float volume) {

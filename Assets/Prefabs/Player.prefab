@@ -155,9 +155,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d05f847555d3e42bb98b00666243d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  boostSpeed: 2
-  dropSpeed: 1
+  horizontalMovementSpeed: 10
+  verticalMovementSpeed: 5
+  boostSpeed: 3
+  dropSpeed: 3
+  maxBoostSpeed: 20
+  maxDropSpeed: 15
 --- !u!82 &9621218
 AudioSource:
   m_ObjectHideFlags: 0

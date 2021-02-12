@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class OptionsController : MonoBehaviour {
@@ -12,25 +11,41 @@ public class OptionsController : MonoBehaviour {
 	[Space]
 	[SerializeField] private GameObject canvasGroupPanel;
 	[SerializeField] private GameObject fadePanel;
+	[SerializeField] private Slider startSliderInSelected;
 
 	private CanvasGroup canvasGroup;
 	private Animator canvasGroupAnimator;
 	private Animator fadeAnimator;
 
-	void Start () {
-		fadeAnimator = fadePanel.GetComponent<Animator>();
+	void Start ()
+	{
+		startSliderInSelected.Select();
 
-		if (GameController.instance.isPaused)
-		{
+		if (GameController.instance.isPaused) {
 			canvasGroup = canvasGroupPanel.GetComponent<CanvasGroup>();
 			canvasGroupAnimator = canvasGroupPanel.GetComponent<Animator>();
 			canvasGroupAnimator.SetBool("FadeIn", true);
-			
+		}
+		else {
+			fadeAnimator = fadePanel.GetComponent<Animator>();
 		}
 
-		if (PlayerPrefs.HasKey ("master_volume")){
-			masterVolumeSlider.value = PlayerPrefsManager.GetMasterVolume ();
-		}else {
+		GetSavedVolumeKeys();
+	}
+
+	void Update()
+	{
+		SoundManager.instance.ChangeMasterVolume(masterVolumeSlider.value);
+		SoundManager.instance.ChangeMusicVolume(musicVolumeSlider.value);
+		SoundManager.instance.ChangeSFXVolume(sfxVolumeSlider.value);
+	}
+
+	private void GetSavedVolumeKeys()
+	{
+		if (PlayerPrefs.HasKey("master_volume")) {
+			masterVolumeSlider.value = PlayerPrefsManager.GetMasterVolume();
+		}
+		else {
 			masterVolumeSlider.value = -20f;
 		}
 
@@ -47,12 +62,6 @@ public class OptionsController : MonoBehaviour {
 		else {
 			sfxVolumeSlider.value = 0f;
 		}
-	}
-	
-	void Update () {
-		SoundManager.instance.ChangeMasterVolume (masterVolumeSlider.value);
-		SoundManager.instance.ChangeMusicVolume(musicVolumeSlider.value);
-		SoundManager.instance.ChangeSFXVolume(sfxVolumeSlider.value);
 	}
 	
 	public void SaveAndExit(){

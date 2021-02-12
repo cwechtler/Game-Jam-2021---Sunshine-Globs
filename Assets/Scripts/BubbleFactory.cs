@@ -27,7 +27,7 @@ public class BubbleFactory : MonoBehaviour
 		for (;;) {
 			if (spawnedBubbles < numberOfBubbles) {
 				GameObject bubbleInstance = GameObject.Instantiate(bubblePrefab, this.transform.position, bubbleAimDirection.transform.rotation);
-				bubbleInstance.transform.SetParent(bubbleAimDirection.transform);
+				bubbleInstance.transform.SetParent(this.transform);
 
 				Bubble bubbleReference = bubbleInstance.GetComponent<Bubble>();
 				bubbleReference.InitializeFromFactory(this, bubbleAimDirection);

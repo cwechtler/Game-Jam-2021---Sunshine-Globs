@@ -11,24 +11,25 @@ public class Bubble : MonoBehaviour
 	[SerializeField] private float moveDirectionDeviation = 0.35f;
 	[SerializeField] private int collisionsAllowed = 6;
 	[Space]
-	[SerializeField] private Transform childTransform;
+	[SerializeField] private AnimationClip growAnimationClip;
+
 
 	private BubbleFactory factoryParent;
 	private GameObject bubbleAimDirection;
 	private bool isDead = false;
 	private Rigidbody2D myRigidbody2D;
+	private AudioSource audioSource;
 
 	void Start()
 	{
 		myRigidbody2D = GetComponent<Rigidbody2D>();
-
-		childTransform.transform.rotation = Quaternion.Inverse(bubbleAimDirection.transform.rotation);
+		audioSource = GetComponent<AudioSource>();
 
 		// if new insance, set velocity of 1 toward local y-axis
 		if (myRigidbody2D.velocity.magnitude == 0) {
 			myRigidbody2D.velocity = bubbleAimDirection.transform.up;
 		}
-
+		StartCoroutine(RotateBubble(growAnimationClip.length));
 		StartCoroutine(MoveBubble());
 	}
 
@@ -36,6 +37,12 @@ public class Bubble : MonoBehaviour
 	{
 		this.factoryParent = _factoryParent;
 		this.bubbleAimDirection = _bubbleAimDirection;
+	}
+
+	public IEnumerator RotateBubble(float waitTime)
+	{
+		yield return new WaitForSeconds(waitTime);
+		this.transform.rotation = Quaternion.identity;
 	}
 
 	private IEnumerator MoveBubble() {
@@ -55,13 +62,22 @@ public class Bubble : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		collisionsAllowed -= 1;
-		if (collisionsAllowed <= 0) {
-			Destroy(gameObject, 0.5f);
+		collisionsAllowed --;
+		if (collisionsAllowed == 0) {
+			SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+			CircleCollider2D circleCollider2D = GetComponent<CircleCollider2D>();
+			spriteRenderer.enabled = false;
+			circleCollider2D.enabled = false;
+
+			AudioClip pop = SoundManager.instance.BubblePop();
+			audioSource.PlayOneShot(pop);
+
 			if (!isDead && factoryParent != null) {
-				factoryParent.spawnedBubbles--;
+				factoryParent.spawnedBubbles--;	
 			}
+
 			isDead = true;
+			Destroy(gameObject, pop.length);
 		}
 	}
 }

@@ -6,9 +6,9 @@ public class LevelManager : MonoBehaviour {
 
 	public static LevelManager instance = null;
 
-	public string currentScene { get; private set; }
+	[SerializeField] private string webglQuitURL = "about:blank";
 
-	private bool button;
+	public string currentScene { get; private set; }
 
 	private void Awake(){
 		if (instance == null){
@@ -89,6 +89,13 @@ public class LevelManager : MonoBehaviour {
 	public void QuitRequest()
 	{
 		Debug.Log("Level Quit Request");
-		Application.Quit();
+
+		#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+		#elif UNITY_WEBGL
+			Application.OpenURL(webglQuitURL);
+		#else
+			Application.Quit();
+		#endif
 	}
 }

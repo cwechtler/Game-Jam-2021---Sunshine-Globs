@@ -67,6 +67,12 @@ MonoBehaviour:
   collectClip: {fileID: 8300000, guid: 8fac9ef1a16f0aa458164acbf189afbb, type: 3}
   buttonClick: {fileID: 8300000, guid: 2cf926c1039d0884aa3ebcf4ca7481ef, type: 3}
   bubbleClip: {fileID: 8300000, guid: a34afa58dde69cb44a10741daf8e4878, type: 3}
+  bubblePops:
+  - {fileID: 8300000, guid: 393998bc6fd1da245b2c483b8e2876aa, type: 3}
+  - {fileID: 8300000, guid: 53b4979f3aba20e4a895854c2cbb40cc, type: 3}
+  - {fileID: 8300000, guid: ef5c305bf0917e74e824e71d4a8c4a03, type: 3}
+  - {fileID: 8300000, guid: 7b6774be8fe82da449897b5fd977d3e8, type: 3}
+  - {fileID: 8300000, guid: 0488b1fd33daf9a408db275627392a39, type: 3}
 --- !u!82 &1178935276
 AudioSource:
   m_ObjectHideFlags: 0

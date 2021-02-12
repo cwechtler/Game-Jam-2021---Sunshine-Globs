@@ -4,8 +4,10 @@ using TMPro;
 
 public class CanvasController : MonoBehaviour
 {
-	[SerializeField] GameObject continueButton;
-	[SerializeField] GameObject fadePanel;
+	[SerializeField] private GameObject continueButton;
+	[SerializeField] private GameObject fadePanel;
+	[SerializeField] private Button buttonToStartAsSelected;
+	[SerializeField] private TextMeshProUGUI versionNumberText;
 
 	private Button button;
 	private TextMeshProUGUI buttonText;
@@ -13,7 +15,9 @@ public class CanvasController : MonoBehaviour
 
 	private void Start()
 	{
+		buttonToStartAsSelected.Select();
 		animator = fadePanel.GetComponent<Animator>();
+		versionNumberText.text = "V " + Application.version;
 
 		if (continueButton != null) {
 			button = continueButton.GetComponent<Button>();
@@ -51,7 +55,6 @@ public class CanvasController : MonoBehaviour
 	}
 
 	public void QuitGame() {
-		animator.SetBool("FadeOut", true);
 		LevelManager.instance.QuitRequest();
 	}
 }

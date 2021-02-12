@@ -79,10 +79,17 @@ public class GameCanvasController : MonoBehaviour
 
 	public void PauseGame()
 	{
-		if (Input.GetButtonDown("Cancel")) {
+		string buttonDown = "Cancel";
+
+		#if UNITY_WEBGL
+				buttonDown = "Pause";
+		#endif
+
+		if (Input.GetButtonDown(buttonDown)) {
 			GameController.instance.PauseGame();
-			pausePanel.SetActive(true);		
+			pausePanel.SetActive(true);
 			pausePanelAnimator.SetBool("FadeIn", true);
+
 		}
 	}
 
@@ -106,5 +113,10 @@ public class GameCanvasController : MonoBehaviour
 		GameController.instance.SavePlayerInfo();
 		LevelManager.instance.LoadLevel(0, .9f);
 		GameController.instance.ResumeGame();
+	}
+
+	public void ExitApplication()
+	{
+		LevelManager.instance.QuitRequest();
 	}
 }

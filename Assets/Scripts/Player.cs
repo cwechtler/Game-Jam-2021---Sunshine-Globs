@@ -4,25 +4,28 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField] private float movementSpeed = 5f;
+	//[SerializeField] private float horizontalAccelerationSpeed = 5f;
+	[SerializeField] private float verticalAccelerationSpeed = 5f;
 	[SerializeField] private float boostSpeed = 15f;
-	[SerializeField] private float dropSpeed = .5f;
+	//[SerializeField] private float dropSpeed = 3f;
 	[Space]
+	[SerializeField] private float maxHorizontalSpeed = 5f;
+	[SerializeField] private float maxVerticalSpeed = 5f;
 	[SerializeField] private float maxBoostSpeed = 15f;
-	[SerializeField] private float maxDropSpeed = 10f;
+	//[SerializeField] private float maxDropSpeed = 15f;
 
 
-	Rigidbody2D myRigidbody2D;
-	SpriteRenderer spriteRenderer;
-	CircleCollider2D myCircleCollider2D;
-	BoxCollider2D myBoxCollider2D;
-	AudioSource playerAudioSource;
+	private Rigidbody2D myRigidbody2D;
+	private SpriteRenderer spriteRenderer;
+	private CircleCollider2D myCircleCollider2D;
+	private BoxCollider2D myBoxCollider2D;
+	private AudioSource playerAudioSource;
 
-	float startingGravityScale;
-	bool moveHorizontaly;
-	bool moveVertically;
+	private float startingGravityScale;
+	private bool moveHorizontaly;
+	private bool moveVertically;
 
-	void Start()
+	private void Start()
 	{
 		myRigidbody2D = GetComponent<Rigidbody2D>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -33,11 +36,9 @@ public class Player : MonoBehaviour
 		startingGravityScale = myRigidbody2D.gravityScale;
 	}
 
-	void Update()
+	private void Update()
 	{
 		Fly();
-		PropelUp();
-		PropelDown();
 		FlipDirection();
 	}
 
@@ -49,33 +50,55 @@ public class Player : MonoBehaviour
 
 	private void Fly()
 	{
-		float running = Input.GetAxis("Horizontal");
-		if (running > 0 || running < 0) {
-			if (!playerAudioSource.isPlaying) {
-				playerAudioSource.Play();
-			}
-		}
-		else {
-			playerAudioSource.Stop();
-		}
-		Vector2 playerVelocity = new Vector2(running * movementSpeed, myRigidbody2D.velocity.y);
-		myRigidbody2D.velocity = playerVelocity;
+		float flyVertically = Input.GetAxis("Vertical");
+		ApplyVerticalVelocity(flyVertically);
+
+		float flyHorizontally = Input.GetAxis("Horizontal");
+		ApplyHorizontalVelocity(flyHorizontally);
+
+		BoostUp();
+		HoldHorizontal();
+
+		PlayFlightAudio(flyVertically, flyHorizontally);
+	}
+
+	private void ApplyHorizontalVelocity(float flyHorizontally)
+	{
+		Vector2 playerVelocityHorizontal = new Vector2(flyHorizontally * maxHorizontalSpeed, myRigidbody2D.velocity.y);
+		myRigidbody2D.velocity = playerVelocityHorizontal;
 		moveHorizontaly = Mathf.Abs(myRigidbody2D.velocity.x) > Mathf.Epsilon;
 	}
 
-	private void PropelUp()
+	private void ApplyVerticalVelocity(float flyUpAndDown)
+	{
+		if (myRigidbody2D.velocity.y <= maxVerticalSpeed && flyUpAndDown > 0) {
+			Vector2 playerVelocity = new Vector2(myRigidbody2D.velocity.x, flyUpAndDown * verticalAccelerationSpeed);
+			myRigidbody2D.velocity += playerVelocity * Time.deltaTime;
+		}
+		else if (myRigidbody2D.velocity.y >= -maxVerticalSpeed && flyUpAndDown < 0) {
+			Vector2 playerVelocity = new Vector2(myRigidbody2D.velocity.x, flyUpAndDown * verticalAccelerationSpeed);
+			myRigidbody2D.velocity += playerVelocity * Time.deltaTime;
+		}
+		moveVertically = Mathf.Abs(myRigidbody2D.velocity.y) > Mathf.Epsilon;
+	}
+
+	private void BoostUp()
 	{
 		if (Input.GetButtonDown("Jump")) {
 			if (myRigidbody2D.velocity.y <= maxBoostSpeed) {
 				Vector2 boostVelocity = new Vector2(0f, boostSpeed);
+
 				myRigidbody2D.velocity += boostVelocity;
 				SoundManager.instance.PlayBoostClip();
 			}
 		}
-		else if(myRigidbody2D.velocity.y >= 5) {
-			myRigidbody2D.AddRelativeForce(-myRigidbody2D.velocity/5);
+		else if (myRigidbody2D.velocity.y >= 5) {
+			myRigidbody2D.AddRelativeForce(-myRigidbody2D.velocity / 5);
 		}
+	}
 
+	private void HoldHorizontal()
+	{
 		if (Input.GetButton("Fire1")) {
 			myRigidbody2D.gravityScale = 0;
 
@@ -91,15 +114,15 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	private void PropelDown() {
-		if (Input.GetButtonDown("Fire2")) {
-			if (myRigidbody2D.velocity.y >= -maxDropSpeed) {
-				Vector2 droptVelocity = new Vector2(0f, dropSpeed);
-				myRigidbody2D.velocity -= droptVelocity;
-				SoundManager.instance.PlayDropClip();
-			}
-		}
-	}
+	//private void PropelDown() {
+	//	if (Input.GetButtonDown("Fire2")) {
+	//		if (myRigidbody2D.velocity.y >= -maxDropSpeed) {
+	//			Vector2 droptVelocity = new Vector2(0f, dropSpeed);
+	//			myRigidbody2D.velocity -= droptVelocity;
+	//			SoundManager.instance.PlayDropClip();
+	//		}
+	//	}
+	//}
 
 	private void FlipDirection()
 	{
@@ -113,6 +136,23 @@ public class Player : MonoBehaviour
 			if (Direction == -1) {
 				transform.localScale = new Vector2(-1f, 1f);
 			}
+		}
+	}
+
+	private void PlayFlightAudio(float flyVertically, float flyHorizontally)
+	{
+		if (flyHorizontally > 0 || flyHorizontally < 0) {
+			if (!playerAudioSource.isPlaying) {
+				playerAudioSource.Play();
+			}
+		}
+		else if (flyVertically > 0 || flyVertically < 0) {
+			if (!playerAudioSource.isPlaying) {
+				playerAudioSource.Play();
+			}
+		}
+		else {
+			playerAudioSource.Stop();
 		}
 	}
 

@@ -6,10 +6,11 @@ public class GameController : MonoBehaviour
 {
 	public static GameController instance = null;
 
-	public List<string> collectedItems { get; private set; }
 	public GameObject playerGO { get; private set; }
 	public bool isPaused { get; private set; }
 	public float timeDeltaTime { get; private set; }
+
+	public List<string> collectedItems;
 
 	private GameObject fadePanel;
 	private GameObject itemPanel;
@@ -35,6 +36,10 @@ public class GameController : MonoBehaviour
 		if (fadePanel != null) {
 			animator = fadePanel.GetComponent<Animator>();
 		}
+	}
+
+	public List<string> GetCollectedItems() {
+		return collectedItems;
 	}
 
 	public void CollectItems(string itemName) {
