@@ -17,7 +17,11 @@ public class CanvasController : MonoBehaviour
 	{
 		buttonToStartAsSelected.Select();
 		animator = fadePanel.GetComponent<Animator>();
-		versionNumberText.text = "V " + Application.version;
+
+		if (versionNumberText != null) {
+			versionNumberText.text = "V " + Application.version;
+		}
+
 
 		if (continueButton != null) {
 			button = continueButton.GetComponent<Button>();

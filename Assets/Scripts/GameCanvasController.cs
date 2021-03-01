@@ -55,22 +55,32 @@ public class GameCanvasController : MonoBehaviour
 		itemCollected.transform.localScale = Vector3.one;
 	}
 
+	private GameObject SelectPrefab(string itemName)
+	{
+		foreach (var item in itemCollectedPrefabs) {
+			if (item.name == itemName + " Item Collected") {
+				return item;
+			}
+		}
+		return null;
+	}
+
 	public void AddCollectedItem(string itemName) {
 
 		collectionText.text = GameController.instance.collectedItems.Count + " of 4";
 
 		switch (itemName) {
 			case "Red":
-				InstantiateItem(itemCollectedPrefabs[0]);
+				InstantiateItem(SelectPrefab(itemName));
 				break;
 			case "Purple":
-				InstantiateItem(itemCollectedPrefabs[1]);
+				InstantiateItem(SelectPrefab(itemName));
 				break;
 			case "Orange":
-				InstantiateItem(itemCollectedPrefabs[2]);
+				InstantiateItem(SelectPrefab(itemName));
 				break;
 			case "Green":
-				InstantiateItem(itemCollectedPrefabs[3]);
+				InstantiateItem(SelectPrefab(itemName));
 				break;
 			default:
 				break;
@@ -85,7 +95,7 @@ public class GameCanvasController : MonoBehaviour
 				buttonDown = "Pause";
 		#endif
 
-		if (Input.GetButtonDown(buttonDown)) {
+		if (Input.GetButtonDown(buttonDown) && !GameController.instance.OptionsOverlayOpen) {
 			GameController.instance.PauseGame();
 			pausePanel.SetActive(true);
 			pausePanelAnimator.SetBool("FadeIn", true);
@@ -101,6 +111,7 @@ public class GameCanvasController : MonoBehaviour
 
 	public void Options()
 	{
+		GameController.instance.OptionsOverlayOpen = true;
 		LevelManager.instance.LoadLevelAdditive("Options Additive Load");
 		pausePanelAnimator.SetBool("FadeIn", false);
 	}

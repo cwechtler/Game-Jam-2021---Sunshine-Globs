@@ -106,7 +106,7 @@ public class Player : MonoBehaviour
 				myRigidbody2D.velocity = new Vector2(myRigidbody2D.velocity.x, 0f);
 			}
 			else {
-				myRigidbody2D.AddRelativeForce(-myRigidbody2D.velocity);
+				myRigidbody2D.AddRelativeForce(-myRigidbody2D.velocity * 2);
 			}
 		}
 		else {

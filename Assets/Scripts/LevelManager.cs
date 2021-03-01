@@ -56,7 +56,6 @@ public class LevelManager : MonoBehaviour {
 	
 	public void LoadNextLevel() {
 		StartCoroutine(LoadScene(SceneManager.GetActiveScene().buildIndex + 1, .9f));
-		SoundManager.instance.SetButtonClip();
 		currentScene = SceneManager.GetSceneByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1).name;
 	}
 

@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
 	public GameObject playerGO { get; private set; }
 	public bool isPaused { get; private set; }
 	public float timeDeltaTime { get; private set; }
+	public bool OptionsOverlayOpen { get; set; } = false;
 
 	public List<string> collectedItems;
 
@@ -48,7 +49,7 @@ public class GameController : MonoBehaviour
 
 		gameCanvasController.AddCollectedItem(itemName);
 
-		if (collectedItems.Count == 4) {
+		if (collectedItems.Count >= 4) {
 			animator.SetBool("FadeOut", true);
 			LevelManager.instance.LoadNextLevel();
 			collectedItems.Clear();
